@@ -1,25 +1,31 @@
 package com.videostreaming.moviestreamingservice.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-@Component
+@Service
 public class MovieCatalogService {
 
-    public final String CATALOG_URL = "http://movie-catalog-service";
+    private final String catalogServiceUrl;
+    private final RestTemplate restTemplate;
 
-
-    @Autowired
-    private RestTemplate restTemplate;
+    // Constructor Injection
+    public MovieCatalogService(
+            @Value("${catalog.service.url:http://movie-catalog-service}") String catalogServiceUrl,
+            RestTemplate restTemplate
+    ) {
+        this.catalogServiceUrl = catalogServiceUrl;
+        this.restTemplate = restTemplate;
+    }
 
     public String getMoviePathById(Long id) {
-        var response = restTemplate.getForEntity(CATALOG_URL + "/movie-catalog/find-path-by-id/{id}", String.class, id);
+        var response = restTemplate.getForEntity(catalogServiceUrl + "/movie-catalog/find-path-by-id/{id}", String.class, id);
         return response.getBody();
     }
 
     public String getMoviePathByName(String name) {
-        var responseName= restTemplate.getForEntity(CATALOG_URL+"/movie-catalog/find-path-by-name/{name}", String.class, name);
+        var responseName = restTemplate.getForEntity(catalogServiceUrl + "/movie-catalog/find-path-by-name/{name}", String.class, name);
         return responseName.getBody();
     }
 }
