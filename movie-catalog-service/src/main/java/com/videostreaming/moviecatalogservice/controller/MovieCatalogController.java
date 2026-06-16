@@ -2,6 +2,8 @@ package com.videostreaming.moviecatalogservice.controller;
 
 import com.videostreaming.moviecatalogservice.dto.MovieCatalogDto;
 import com.videostreaming.moviecatalogservice.service.MovieCatalogService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,22 +19,26 @@ public class MovieCatalogController {
     }
 
     @PostMapping("/movie-catalog/save")
-    public List<MovieCatalogDto> saveAll(@RequestBody List<MovieCatalogDto> movieCatalogList) {
-        return movieCatalogService.saveAll(movieCatalogList);
+    public ResponseEntity<List<MovieCatalogDto>> saveAll(@RequestBody List<MovieCatalogDto> movieCatalogList) {
+        List<MovieCatalogDto> savedMovies = movieCatalogService.saveAll(movieCatalogList);
+        return new ResponseEntity<>(savedMovies, HttpStatus.CREATED);
     }
 
     @GetMapping("/movie-catalog/lists")
-    public List<MovieCatalogDto> getAll() {
-        return movieCatalogService.getAll();
+    public ResponseEntity<List<MovieCatalogDto>> getAll() {
+        List<MovieCatalogDto> movies = movieCatalogService.getAll();
+        return ResponseEntity.ok(movies);
     }
 
     @GetMapping("/movie-catalog/find-path-by-id/{id}")
-    public String findPathById(@PathVariable Long id) {
-        return movieCatalogService.findPathById(id);
+    public ResponseEntity<String> findPathById(@PathVariable Long id) {
+        String path = movieCatalogService.findPathById(id);
+        return ResponseEntity.ok(path);
     }
 
     @GetMapping("/movie-catalog/find-path-by-name/{name}")
-    public String findPathByName(@PathVariable String name) {
-        return movieCatalogService.findPathByName(name);
+    public ResponseEntity<String> findPathByName(@PathVariable String name) {
+        String path = movieCatalogService.findPathByName(name);
+        return ResponseEntity.ok(path);
     }
 }
